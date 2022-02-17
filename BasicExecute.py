@@ -5,14 +5,7 @@ class BasicExecute:
 
     def __init__(self, tree, env, code_output, x, t):
         self.env = env
-        result = self.walkTree(tree, code_output)
-
-    def isfloat(self, num):
-        try:
-            float(num)
-            return True
-        except ValueError:
-            return False
+        self.walkTree(tree, code_output)
 
     def walkTree(self, node, code_output):
 
