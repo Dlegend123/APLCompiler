@@ -126,5 +126,9 @@ class BasicParser(Parser):
     def statement(self, p):
         return 'print', p.expr
 
+    @_('PRINT STRING')
+    def expr(self, p):
+        return 'var', p.STRING
+
     def error(self, p):
         return ValueError("Parsing error at token %s" % str(p))
