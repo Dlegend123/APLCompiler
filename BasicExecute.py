@@ -1,3 +1,4 @@
+import re
 
 
 class BasicExecute:
@@ -5,12 +6,13 @@ class BasicExecute:
     def __init__(self, tree, env, code_output, x, t):
         self.env = env
         result = self.walkTree(tree, code_output)
-        if x == t:
-            if result is not None and isinstance(result, int):
-                code_output.insert("1.0", result)
-        if isinstance(result, str) and result[0] == '"':
-            if result is not None and isinstance(result, int):
-                code_output.insert("1.0", result)
+
+    def isfloat(self, num):
+        try:
+            float(num)
+            return True
+        except ValueError:
+            return False
 
     def walkTree(self, node, code_output):
 
@@ -85,10 +87,10 @@ class BasicExecute:
 
         if node[0] == 'var':
             try:
-                return str(self.env[node[1]]).replace("\"\"", "")
+                code_output.insert("1.0", self.env[node[1]])
+                return self.env[node[1]]
             except LookupError:
                 code_output.insert("1.0", "Undefined variable '" + node[1] + "' found!")
-                return 0
         if node[0] == 'for_loop':
             if node[1][0] == 'for_loop_setup':
                 loop_setup = self.walkTree(node[1], code_output)

@@ -5,7 +5,6 @@ class BasicLex(Lexer):
     # Define tokens as regular expressions
     # (stored as raw strings)
     NAME = r'[a-zA-Z_][a-zA-Z0-9_]*'
-    STRING = r'\".*?\"'
     tokens = {f'NAME', f'STRING', f'FLOAT', f'INTEGER', f'EQ', f'GT', f'LT', f'LE', f'GE', f'NE', f'IF', f'WHILE',
               f'ELSE', f'PRINT', f'THEN', f'TO', f'FOR', f'ARROW', f'FUN', f'EXP'}
 
@@ -44,6 +43,10 @@ class BasicLex(Lexer):
         t.value = int(t.value)
         return t
 
+    @_(r"\".*?\"")
+    def STRING(self, t):
+        t.value = t.value.strip("\"")
+        return t
     # Comment token
     @_(r'//.*')
     def COMMENT(self, t):

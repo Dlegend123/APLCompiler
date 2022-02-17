@@ -118,9 +118,6 @@ class BasicParser(Parser):
 	def expr(self, p):
 		return ('num', p.INTEGER)
 
-	@_('STRING')
-	def expr(self, p):
-		return ('str', p.STRING)
 	@_('PRINT expr')
 	def statement(self, p):
 		return p.expr
