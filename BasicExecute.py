@@ -70,7 +70,7 @@ class BasicExecute:
         elif node[0] == 'div':
             return self.walkTree(node[1], code_output) / self.walkTree(node[2], code_output)
         elif node[0] == 'comma':
-            return self.walkTree(node[2], code_output), self.walkTree(node[1], code_output)
+            return str(self.walkTree(node[2], code_output)) + str(self.walkTree(node[1], code_output))
         elif node[0] == 'le':
             return self.walkTree(node[1], code_output) <= self.walkTree(node[2], code_output)
         elif node[0] == 'lt':
