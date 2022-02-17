@@ -65,6 +65,3 @@ class BasicLex(Lexer):
         self.index += 1
         return "Illegal character '%s'" % t.value[0]
 
-    @_(r'PRINT')
-    def p_statement_print(self, t):
-        return t
