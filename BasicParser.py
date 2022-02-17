@@ -30,6 +30,10 @@ class BasicParser(Parser):
 	def statement(self, p):
 		return ('if_stmt', p.expr, ('branch', p.statement0, p.statement1))
 
+	@_('IF expr THEN statement')
+	def statement(self, p):
+		return ('if_stmt1', p.expr, ('branch', p.statement0))
+
 	@_('FUN NAME "(" ")" ARROW statement')
 	def statement(self, p):
 		return ('fun_def', p.NAME, p.statement)
@@ -118,6 +122,14 @@ class BasicParser(Parser):
 	def expr(self, p):
 		return ('num', p.INTEGER)
 
+	@_('LPAREN expr RPAREN')
+	def expr(self, p):
+		return p.expr
+
 	@_('PRINT expr')
 	def statement(self, p):
-		return p.expr
+		return 'print', p.expr
+
+	@_('STRING')
+	def expr(self, p):
+		return 'str', p.STRING

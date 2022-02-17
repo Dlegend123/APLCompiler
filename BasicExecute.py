@@ -24,6 +24,8 @@ class BasicExecute:
                 self.walkTree(node[1], code_output)
                 self.walkTree(node[2], code_output)
 
+        if node[0] == 'print':
+            return self.walkTree(node[1], code_output)
         if node[0] == 'num':
             return node[1]
 
@@ -36,6 +38,12 @@ class BasicExecute:
                 return self.walkTree(node[2][1], code_output)
             else:
                 return self.walkTree(node[2][2], code_output)
+
+        if node[0] == 'if_stmt1':
+            result = self.walkTree(node[1], code_output)
+            if result:
+                return self.walkTree(node[2][1], code_output)
+
         if node[0] == 'fun_def':
             self.env[node[1]] = node[2]
 
@@ -54,7 +62,7 @@ class BasicExecute:
         elif node[0] == 'div':
             return self.walkTree(node[1], code_output) / self.walkTree(node[2], code_output)
         elif node[0] == 'comma':
-            return self.walkTree(node[1], code_output), self.walkTree(node[2], code_output)
+            return self.walkTree(node[2], code_output), self.walkTree(node[1], code_output)
         elif node[0] == 'le':
             return self.walkTree(node[1], code_output) <= self.walkTree(node[2], code_output)
         elif node[0] == 'lt':

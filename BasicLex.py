@@ -6,7 +6,7 @@ class BasicLex(Lexer):
     # (stored as raw strings)
     NAME = r'[a-zA-Z_][a-zA-Z0-9_]*'
     tokens = {f'NAME', f'STRING', f'FLOAT', f'INTEGER', f'EQ', f'GT', f'LT', f'LE', f'GE', f'NE', f'IF', f'WHILE',
-              f'ELSE', f'PRINT', f'THEN', f'TO', f'FOR', f'ARROW', f'FUN', f'EXP'}
+              f'ELSE', f'PRINT', f'THEN', f'TO', f'FOR', f'ARROW', f'FUN', f'EXP', f'LPAREN', f'RPAREN'}
 
     ignore = '\t '
     literals = {'=', '+', '-', '/', '*', '(', ')', ',', ';'}
@@ -29,10 +29,13 @@ class BasicLex(Lexer):
     GE = r'>='
     GT = r'>'
     NE = r'!='
+    LPAREN = r'\('
+    RPAREN = r'\)'
     EQ = r'=='
     PRINT = r'PRINT'
-    # Number token
+    NAME['PRINT'] = PRINT
 
+    # Number token
     @_(r'(\d*\.\d+)|(\d+\.\d*)')
     def FLOAT(self, t):
         t.value = float(t.value)
@@ -61,3 +64,7 @@ class BasicLex(Lexer):
     def error(self, t):
         self.index += 1
         return "Illegal character '%s'" % t.value[0]
+
+    @_(r'PRINT')
+    def p_statement_print(self, t):
+        return t
