@@ -3,7 +3,7 @@ import re
 
 class BasicExecute:
 
-    def __init__(self, tree, env, code_output, x, t):
+    def __init__(self, tree, env, code_output):
         self.env = env
         self.walkTree(tree, code_output)
 
@@ -26,6 +26,7 @@ class BasicExecute:
 
         if node[0] == 'print':
             return self.walkTree(node[1], code_output)
+
         if node[0] == 'num':
             return node[1]
 

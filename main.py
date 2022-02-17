@@ -38,10 +38,10 @@ def run():
 
         text = editor.get('1.0', END)
         if text:
-            code_output.delete('1.0', END)
             for x in text.rstrip('\r\n').split("\n"):
                 tree = parser.parse(lexer.tokenize(x))
-                BasicExecute(tree, env, code_output, x, text.rstrip('\r\n').split("\n")[-1])
+                code_output.delete('1.0', END)
+                BasicExecute(tree, env, code_output)
 
 menu_bar = Menu(compiler)
 file_menu = Menu(menu_bar, tearoff=0)

@@ -33,10 +33,13 @@ class BasicLex(Lexer):
     RPAREN = r'\)'
     EQ = r'=='
     PRINT = r'PRINT'
+    NAME['IF'] = IF
+    NAME['ELSE'] = ELSE
+    NAME['WHILE'] = WHILE
     NAME['PRINT'] = PRINT
 
     # Number token
-    @_(r'(\d*\.\d+)|(\d+\.\d*)')
+    @_(r"\d+\.\d*")
     def FLOAT(self, t):
         t.value = float(t.value)
         return t
