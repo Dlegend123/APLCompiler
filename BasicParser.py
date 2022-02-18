@@ -118,9 +118,17 @@ class BasicParser(Parser):
     def statement(self, p):
         return ('comma', p.expr, p.STRING)
 
-    @_('STRING', 'INTEGER', 'FLOAT')
+    @_('STRING')
     def expr(self, p):
-        return ('num', p[0])
+        return ('str', p.STRING)
+
+    @_('FLOAT')
+    def expr(self, p):
+        return ('num', p.FLOAT)
+
+    @_('INTEGER')
+    def expr(self, p):
+        return ('num', p.INTEGER)
 
     @_('LPAREN expr RPAREN')
     def expr(self, p):
@@ -129,6 +137,3 @@ class BasicParser(Parser):
     @_('PRINT expr')
     def statement(self, p):
         return 'print', p.expr
-
-    def error(self, p):
-        return ValueError("Parsing error at token %s" % str(p))

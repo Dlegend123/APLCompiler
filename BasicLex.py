@@ -4,7 +4,7 @@ from sly import Lexer
 class BasicLex(Lexer):
     # Define tokens as regular expressions
     # (stored as raw strings)
-    NAME = r'[a-zA-Z_][a-zA-Z0-9_]*'
+
     tokens = {f'NAME', f'STRING', f'FLOAT', f'INTEGER', f'EQ', f'GT', f'LT', f'LE', f'GE', f'NE', f'IF', f'WHILE',
               f'ELSE', f'PRINT', f'THEN', f'TO', f'FOR', f'ARROW', f'FUN', f'EXP', f'LPAREN', f'RPAREN'}
 
@@ -22,7 +22,6 @@ class BasicLex(Lexer):
     FUN = r'FUN'
     TO = r'TO'
     ARROW = r'->'
-
     WHILE = r'WHILE'
     LE = r'<='
     LT = r'<'
@@ -33,10 +32,7 @@ class BasicLex(Lexer):
     RPAREN = r'\)'
     EQ = r'=='
     PRINT = r'PRINT'
-    NAME['IF'] = IF
-    NAME['ELSE'] = ELSE
-    NAME['WHILE'] = WHILE
-    NAME['PRINT'] = PRINT
+
 
     # Number token
     @_(r"\d+\.\d*")
@@ -49,10 +45,22 @@ class BasicLex(Lexer):
         t.value = int(t.value)
         return t
 
-    @_(r"\".*?\"")
+    @_(r'''("[^"\\]*(\\.[^"\\]*)*"|'[^'\\]*(\\.[^'\\]*)*')''')
     def STRING(self, t):
-        t.value = t.value.strip("\"")
+        t.value = self.remove_quotes(t.value)
         return t
+
+    def remove_quotes(self, text: str):
+        if text.startswith('\"') or text.startswith('\''):
+            return text[1:-1]
+        return text
+
+    NAME = r'[a-zA-Z_][a-zA-Z0-9_]*'
+    NAME['IF'] = IF
+    NAME['ELSE'] = ELSE
+    NAME['WHILE'] = WHILE
+    NAME['PRINT'] = PRINT
+
     # Comment token
     @_(r'//.*')
     def COMMENT(self, t):
@@ -66,5 +74,6 @@ class BasicLex(Lexer):
 
     def error(self, t):
         self.index += 1
-        return "Illegal character '%s'" % t.value[0]
+        from main import code_output
+        code_output.insert("1.0", "Illegal character '%s'" % t.value[0])
 
