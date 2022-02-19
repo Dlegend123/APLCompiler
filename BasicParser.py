@@ -106,11 +106,11 @@ class BasicParser(Parser):
     def expr(self, p):
         return ('ne', p.expr0, p.expr1)
 
-    @_('PRINT expr "," expr','PRINT expr "," STRING','PRINT STRING "," expr')
+    @_('PRINT expr "," expr', 'PRINT expr "," STRING', 'PRINT STRING "," expr')
     def expr(self, p):
         return ('comma', p[1], p[3])
 
-    @_('NUMBER', 'STRING')
+    @_('FLOAT', 'STRING', 'INTEGER')
     def expr(self, p):
         return p[0]
 
@@ -137,3 +137,7 @@ class BasicParser(Parser):
     @_('')
     def statement_list(self, p):
         return ('statement-list-end')
+
+    def error(self, p):
+        from main import code_output
+        code_output.insert("1.0", "Parsing error at token %s" % str(p))
