@@ -116,7 +116,7 @@ class BasicParser(Parser):
 
     @_('LPAREN expr RPAREN','LPAREN statement RPAREN')
     def expr(self, p):
-        return p[1]
+        return 'group-expression', p[1]
 
     @_('PRINT expr')
     def expr(self, p):
@@ -137,7 +137,3 @@ class BasicParser(Parser):
     @_('')
     def statement_list(self, p):
         return ('statement-list-end')
-
-    def error(self, p):
-        from main import code_output
-        code_output.insert("1.0", "Parsing error at token %s" % str(p))

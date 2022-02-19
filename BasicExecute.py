@@ -1,7 +1,3 @@
-import re
-
-import BasicParser
-
 
 class BasicExecute:
 
@@ -70,8 +66,9 @@ class BasicExecute:
                 return self.walkTree(self.env[node[1]], code_output)
             except LookupError:
                 code_output.insert("1.0", "Undefined function '%s'" % node[1])
-
-        if node[0] == 'add':
+        if node[0] =='group-expression':
+            return self.walkTree(node[1], code_output)
+        elif node[0] == 'add':
             return self.walkTree(node[1], code_output) + self.walkTree(node[2], code_output)
         elif node[0] == 'sub':
             return self.walkTree(node[1], code_output) - self.walkTree(node[2], code_output)

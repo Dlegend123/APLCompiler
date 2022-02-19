@@ -1,8 +1,9 @@
-import os
+
 import sys
 import subprocess
 
-from sly import Lexer
+import sly.yacc
+from sly import*
 
 from BasicExecute import BasicExecute
 from BasicLex import BasicLex
@@ -46,28 +47,30 @@ def run():
         save_prompt = Toplevel()
         text = Label(save_prompt, text='Please save your code')
         text.pack()
+
         return
     command = f'python {file_path}'
     process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     if __name__ == '__main__':
         lexer = BasicLex()
         parser = BasicParser()
-
-        #pk_exe = Tk()
-        #pk_exe.title(file_path.split("/")[-1])
+        pk_exe = Tk()
+        pk_exe.title(file_path.split("/")[-1])
         env = {}
         #os.system("start /B start cmd.exe @cmd /k pyinstaller --onefile -w " + file_path.split("/")[-1])
         text = editor.get('1.0', END)
         if text:
-            #n_editor = Text(pk_exe, fg="black", height=13)
-            #n_editor.place_info(x=70, y=90)
+            n_editor = Text(pk_exe, fg="black", height=13)
+            n_editor.pack()
+            code_output.delete('1.0', END)
             for x in text.rstrip('\r\n').split("\n"):
                 tree = parser.parse(lexer.tokenize(x))
-                code_output.delete('1.0', END)
-                BasicExecute(tree, env, code_output)
-                #BasicExecute(tree, env, n_editor)
-            #output, error = process.communicate()
-            #code_output.insert("1.0", error)
+                #code_output.insert("1.0", tree)
+                n_editor.delete('1.0', END)
+                #BasicExecute(tree, env, code_output)
+                BasicExecute(tree, env, n_editor)
+            output, error = process.communicate()
+            code_output.insert("1.0", error)
 
 
 menu_bar = Menu(compiler)
@@ -86,7 +89,6 @@ compiler.config(menu=menu_bar)
 
 editor = Text()
 editor.pack()
-
 code_output = Text(height=10)
 code_output.pack()
 
