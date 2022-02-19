@@ -7,7 +7,7 @@ class BasicLex(Lexer):
     # (stored as raw strings)
 
     tokens = {f'NAME', f'STRING', f'NUMBER', f'EQ', f'GT', f'LT', f'LE', f'TO', f'DO', f'GE', f'NE', f'IF', f'WHILE',
-              f'ELSE', f'PRINT', f'THEN', f'SC', f'TO', f'BEGIN', f'END', f'FOR', f'ARROW', f'FUN', f'EXP', f'LPAREN', f'RPAREN'}
+              f'ELSE', f'PRINT', f'THEN', f'SC', f'TO', f'BEGIN', f'COLON', f'END', f'FOR', f'ARROW', f'FUN', f'EXP', f'LPAREN', f'RPAREN'}
 
     ignore = '\t '
     literals = {'=', '+', '-', '/', '*', '(', ')', ',', ';'}
@@ -17,6 +17,7 @@ class BasicLex(Lexer):
 
     # Define tokens
     IF = r'IF'
+    COLON = r':'
     THEN = r'THEN'
     ELSE = r'ELSE'
     FOR = r'FOR'

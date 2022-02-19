@@ -16,6 +16,9 @@ class BasicExecute:
         elif isinstance(result, str):
             code_output.insert("1.0", result)
 
+    def execute(self, instruction, arguments):
+        return getattr(self, instruction)(*arguments)
+
     def walkTree(self, node, code_output):
 
         if isinstance(node, int):
@@ -54,8 +57,7 @@ class BasicExecute:
         if node[0] == 'if_stmt1':
             result = self.walkTree(node[1], code_output)
             if result:
-                return self.walkTree(node[2][1], code_output)
-
+                return self.walkTree(node[2], code_output)
         if node[0] == 'while':
             while self.walkTree(node[1], code_output):
                 self.walkTree(node[2], code_output)
@@ -79,11 +81,6 @@ class BasicExecute:
             return self.walkTree(node[1], code_output) / self.walkTree(node[2], code_output)
         elif node[0] == 'comma':
             return str(self.walkTree(node[1], code_output)) + str(self.walkTree(node[2], code_output))
-        elif node[0] == 'semi':
-            return self.walkTree(node[1], code_output)
-        elif node[0] == 'comma1':
-            return str(self.walkTree(node[1], code_output)) + str(self.walkTree(node[2], code_output))
-            + str(self.walkTree(node[3], code_output))
         elif node[0] == 'le':
             return self.walkTree(node[1], code_output) <= self.walkTree(node[2], code_output)
         elif node[0] == 'lt':

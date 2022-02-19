@@ -50,14 +50,6 @@ class BasicParser(Parser):
     def var_assign(self, p):
         return ('var_assign', p[0], p[2])
 
-   # @_('NAME "=" expr \n PRINT expr')
-    #def expr(self, p):
-     #   return 'semi', (('var_assign', p[0], p[2]), ('print', p[5]))
-
-    #@_('NAME "=" expr \n NAME "=" STRING')
-    #def expr(self, p):
-     #   return 'semi', (('var_assign', p[0], p[2]), ('var_assign', p[4], p[6]))
-
     @_('expr')
     def statement(self, p):
         return (p.expr)
@@ -117,10 +109,6 @@ class BasicParser(Parser):
     @_('PRINT expr "," expr','PRINT expr "," STRING','PRINT STRING "," expr')
     def expr(self, p):
         return ('comma', p[1], p[3])
-
-    @_('PRINT expr "," expr "," STRING', 'PRINT expr "," STRING "," expr', 'PRINT STRING "," expr "," expr')
-    def expr(self, p):
-        return ('comma1', p[1], p[3], p[4])
 
     @_('NUMBER', 'STRING')
     def expr(self, p):
