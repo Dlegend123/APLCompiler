@@ -49,8 +49,8 @@ def run():
         text.pack()
 
         return
-    command = f'python {file_path}'
-    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+    #command = f'python {file_path}'
+    #process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     if __name__ == '__main__':
         lexer = BasicLex()
         parser = BasicParser()
@@ -60,7 +60,7 @@ def run():
         #os.system("start /B start cmd.exe @cmd /k pyinstaller --onefile -w " + file_path.split("/")[-1])
         text = editor.get('1.0', END)
         if text:
-            n_editor = Text(pk_exe, fg="black", height=13)
+            n_editor = Text(pk_exe, background='darkred', fg="white", height=13)
             n_editor.pack()
             code_output.delete('1.0', END)
             for x in text.rstrip('\r\n').split("\n"):
@@ -69,8 +69,8 @@ def run():
                 n_editor.delete('1.0', END)
                 #BasicExecute(tree, env, code_output)
                 BasicExecute(tree, env, n_editor)
-            output, error = process.communicate()
-            code_output.insert("1.0", error)
+            #output, error = process.communicate()
+            #code_output.insert("1.0", error)
 
 
 menu_bar = Menu(compiler)
@@ -84,12 +84,14 @@ menu_bar.add_cascade(label='File', menu=file_menu)
 run_bar = Menu(menu_bar, tearoff=0)
 run_bar.add_command(label='Run', command=run)
 menu_bar.add_cascade(label='Run', menu=run_bar)
-
 compiler.config(menu=menu_bar)
 
 editor = Text()
+editor.config()
 editor.pack()
-code_output = Text(height=10)
+code_output = Text(height=10, bg='black', fg='red')
+border_color = Frame(code_output)
+border_color.pack(padx=320, pady=70)
 code_output.pack()
 
 compiler.mainloop()
