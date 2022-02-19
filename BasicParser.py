@@ -19,7 +19,7 @@ class BasicParser(Parser):
         self.env = {}
 
     @_('')
-    def statement(self, p):
+    def statement(self, parsed):
         pass
 
     @_('FOR var_assign TO expr THEN statement')
@@ -32,7 +32,11 @@ class BasicParser(Parser):
 
     @_('IF expr THEN statement')
     def statement(self, p):
-        return ('if_stmt1', p.expr, ('branch', p.statement0))
+        return ('if_stmt1', p.expr, ('branch', p.statement))
+
+    @_('WHILE expr DO statement')
+    def statement(self, p):
+        return ('while', p.expr, p.statement)
 
     @_('FUN NAME "(" ")" ARROW statement')
     def statement(self, p):
@@ -42,17 +46,17 @@ class BasicParser(Parser):
     def statement(self, p):
         return ('fun_call', p.NAME)
 
-    @_('var_assign')
-    def statement(self, p):
-        return p.var_assign
-
-    @_('NAME "=" expr')
+    @_('NAME "=" expr', 'NAME "=" STRING')
     def var_assign(self, p):
-        return ('var_assign', p.NAME, p.expr)
+        return ('var_assign', p[0], p[2])
 
-    @_('NAME "=" STRING')
-    def var_assign(self, p):
-        return ('var_assign', p.NAME, p.STRING)
+    @_('NAME "=" expr \n PRINT expr')
+    def expr(self, p):
+        return 'semi', (('var_assign', p[0], p[2]), ('print', p[5]))
+
+    @_('NAME "=" expr \n NAME "=" STRING')
+    def expr(self, p):
+        return 'semi', (('var_assign', p[0], p[2]), ('var_assign', p[4], p[6]))
 
     @_('expr')
     def statement(self, p):
@@ -110,30 +114,38 @@ class BasicParser(Parser):
     def expr(self, p):
         return ('ne', p.expr0, p.expr1)
 
-    @_('PRINT expr "," expr')
+    @_('PRINT expr "," expr','PRINT expr "," STRING','PRINT STRING "," expr')
     def expr(self, p):
-        return ('comma', p.expr0, p.expr1)
+        return ('comma', p[1], p[3])
 
-    @_('PRINT expr "," STRING')
-    def statement(self, p):
-        return ('comma', p.expr, p.STRING)
-
-    @_('STRING')
+    @_('PRINT expr "," expr "," STRING', 'PRINT expr "," STRING "," expr', 'PRINT STRING "," expr "," expr')
     def expr(self, p):
-        return ('str', p.STRING)
+        return ('comma1', p[1], p[3], p[4])
 
-    @_('FLOAT')
+    @_('NUMBER', 'STRING')
     def expr(self, p):
-        return ('num', p.FLOAT)
-
-    @_('INTEGER')
-    def expr(self, p):
-        return ('num', p.INTEGER)
+        return p[0]
 
     @_('LPAREN expr RPAREN')
     def expr(self, p):
         return p.expr
 
     @_('PRINT expr')
+    def expr(self, p):
+        return 'print', p[1]
+
+    @_('var_assign')
     def statement(self, p):
-        return 'print', p.expr
+        return p.var_assign
+
+    @_('BEGIN statement_list END')
+    def statement(self, p):
+        return ('statement-compound', p.statement_list)
+
+    @_('statement statement_list')
+    def statement_list(self, p):
+        return ('statement-list', p.statement, p.statement_list)
+
+    @_('')
+    def statement_list(self, p):
+        return ('statement-list-end')

@@ -1,5 +1,7 @@
 import re
 
+import BasicParser
+
 
 class BasicExecute:
 
@@ -17,6 +19,8 @@ class BasicExecute:
     def walkTree(self, node, code_output):
 
         if isinstance(node, int):
+            return node
+        if isinstance(node, float):
             return node
         if isinstance(node, str):
             return node
@@ -52,6 +56,10 @@ class BasicExecute:
             if result:
                 return self.walkTree(node[2][1], code_output)
 
+        if node[0] == 'while':
+            while self.walkTree(node[1], code_output):
+                self.walkTree(node[2], code_output)
+
         if node[0] == 'fun_def':
             self.env[node[1]] = node[2]
 
@@ -71,6 +79,11 @@ class BasicExecute:
             return self.walkTree(node[1], code_output) / self.walkTree(node[2], code_output)
         elif node[0] == 'comma':
             return str(self.walkTree(node[1], code_output)) + str(self.walkTree(node[2], code_output))
+        elif node[0] == 'semi':
+            return self.walkTree(node[1], code_output)
+        elif node[0] == 'comma1':
+            return str(self.walkTree(node[1], code_output)) + str(self.walkTree(node[2], code_output))
+            + str(self.walkTree(node[3], code_output))
         elif node[0] == 'le':
             return self.walkTree(node[1], code_output) <= self.walkTree(node[2], code_output)
         elif node[0] == 'lt':
