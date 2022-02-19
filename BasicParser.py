@@ -32,7 +32,7 @@ class BasicParser(Parser):
 
     @_('IF expr THEN statement')
     def statement(self, p):
-        return ('if_stmt1', p.expr, ('branch', p.statement))
+        return ('if_stmt1', p.expr, p.statement)
 
     @_('WHILE expr DO statement')
     def statement(self, p):
@@ -50,13 +50,13 @@ class BasicParser(Parser):
     def var_assign(self, p):
         return ('var_assign', p[0], p[2])
 
-    @_('NAME "=" expr \n PRINT expr')
-    def expr(self, p):
-        return 'semi', (('var_assign', p[0], p[2]), ('print', p[5]))
+   # @_('NAME "=" expr \n PRINT expr')
+    #def expr(self, p):
+     #   return 'semi', (('var_assign', p[0], p[2]), ('print', p[5]))
 
-    @_('NAME "=" expr \n NAME "=" STRING')
-    def expr(self, p):
-        return 'semi', (('var_assign', p[0], p[2]), ('var_assign', p[4], p[6]))
+    #@_('NAME "=" expr \n NAME "=" STRING')
+    #def expr(self, p):
+     #   return 'semi', (('var_assign', p[0], p[2]), ('var_assign', p[4], p[6]))
 
     @_('expr')
     def statement(self, p):
@@ -126,9 +126,9 @@ class BasicParser(Parser):
     def expr(self, p):
         return p[0]
 
-    @_('LPAREN expr RPAREN')
+    @_('LPAREN expr RPAREN','LPAREN statement RPAREN')
     def expr(self, p):
-        return p.expr
+        return p[1]
 
     @_('PRINT expr')
     def expr(self, p):
