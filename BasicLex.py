@@ -100,6 +100,7 @@ class BasicLex(Lexer):
     def newline(self, t):
         self.lineno = t.value.count('\n')
 
+    #error
     def error(self, t):
         from main import code_output
         code_output.insert("1.0", "Illegal character '%s'" % t.value[0])
