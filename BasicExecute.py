@@ -1,25 +1,23 @@
 import parser
-
+from tkinter import *
 
 class BasicExecute:
 
     def __init__(self, tree, env, n_editor, code_output):
         self.env = env
         result = self.walkTree(tree, n_editor, code_output)
-
-        if result is None:
-            pass
-        elif result is not None and type(result) in [int, float]:
-            n_editor.insert("1.0", result)
-        elif isinstance(result, str):
-            n_editor.insert("1.0", result)
-        elif isinstance(result, bool):
-            if result is True:
-                n_editor.insert("1.0", "True")
-            else:
-                n_editor.insert("1.0", "False")
-    def execute(self, instruction, arguments):
-        return getattr(self, instruction)(*arguments)
+        if not str(code_output.get("1.0", END)).__contains__("Error"):
+            if result is None:
+                pass
+            elif result is not None and type(result) in [int, float]:
+                n_editor.insert("1.0", result)
+            elif isinstance(result, str):
+                n_editor.insert("1.0", result)
+            elif isinstance(result, bool):
+                if result is True:
+                    n_editor.insert("1.0", "True")
+                else:
+                    n_editor.insert("1.0", "False")
 
     def walkTree(self, node, n_editor, code_output):
 
@@ -77,46 +75,54 @@ class BasicExecute:
                 return self.walkTree(self.env[node[1]], n_editor, code_output)
             except LookupError:
                 code_output.insert("1.0", "Undefined function '%s'" % node[1] + "\n")
+                return 0
         if node[0] == 'group-expression':
             return self.walkTree(node[1], n_editor, code_output)
         elif node[0] == 'add':
             try:
                 return self.walkTree(node[1], n_editor, code_output) + self.walkTree(node[2], n_editor, code_output)
             except TypeError:
-                code_output.insert("1.0", "unsupported operand type(s) for '+' found!\n")
+                code_output.insert("1.0", "TypeError: unsupported operand type(s) for '+' found!\n")
+                return 0
             except AttributeError:
                 code_output.insert("1.0", "AttributeError: object has no attribute '"+node[1] + "\n")
+                return 0
         elif node[0] == 'sub':
             try:
                 return self.walkTree(node[1], n_editor, code_output) - self.walkTree(node[2], n_editor, code_output)
             except TypeError:
-                code_output.insert("1.0", "unsupported operand type(s) for '-' found!\n")
+                code_output.insert("1.0", "TypeError: unsupported operand type(s) for '-' found!\n")
+                return 0
             except AttributeError:
                 code_output.insert("1.0", "AttributeError: object has no attribute '"+node[1] + "\n")
+                return 0
         elif node[0] == 'mul':
             try:
                 return self.walkTree(node[1], n_editor, code_output) * self.walkTree(node[2], n_editor, code_output)
             except TypeError:
-                code_output.insert("1.0", "unsupported operand type(s) for '*' found!\n")
+                code_output.insert("1.0", "TypeError: unsupported operand type(s) for '*' found!\n")
+                return 0
             except AttributeError:
-                code_output.insert("1.0", "AttributeError: "
-                                   + "object has no attribute '" + node[1] + "\n")
+                code_output.insert("1.0", "AttributeError: " + "object has no attribute '" + node[1] + "\n")
+                return 0
         elif node[0] == 'mod':
             try:
                 return self.walkTree(node[1], n_editor, code_output) % self.walkTree(node[2], n_editor, code_output)
             except TypeError:
-                code_output.insert("1.0", "unsupported operand type(s) for '*' found!\n")
+                code_output.insert("1.0", "TypeError: unsupported operand type(s) for '%' found!\n")
+                return 0
             except AttributeError:
-                code_output.insert("1.0", "AttributeError: "
-                                   + "object has no attribute '" + node[1] + "\n")
+                code_output.insert("1.0", "AttributeError: " + "object has no attribute '" + node[1] + "\n")
+                return 0
         elif node[0] == 'div':
             try:
                 return self.walkTree(node[1], n_editor, code_output) / self.walkTree(node[2], n_editor, code_output)
             except TypeError:
-                code_output.insert("1.0", "unsupported operand type(s) for '/' found!\n")
+                code_output.insert("1.0", "TypeError: unsupported operand type(s) for '/' found!\n")
+                return 0
             except AttributeError:
-                code_output.insert("1.0", "AttributeError: "
-                                   + "object has no attribute '"+node[1] + "\n")
+                code_output.insert("1.0", "AttributeError: " + "object has no attribute '"+node[1] + "\n")
+                return 0
         elif node[0] == 'le':
             return self.walkTree(node[1], n_editor, code_output) <= self.walkTree(node[2], n_editor, code_output)
         elif node[0] == 'lt':
@@ -130,10 +136,11 @@ class BasicExecute:
                     x += 1
                 return xsum
             except TypeError:
-                code_output.insert("1.0", "unsupported operand type(s) for '/' found!\n")
+                code_output.insert("1.0", "TypeError: unsupported operand type(s) for '^' found!\n")
+                return 0
             except AttributeError:
-                code_output.insert("1.0", "AttributeError: "
-                                   + "object has no attribute '" + node[1] + "\n")
+                code_output.insert("1.0", "AttributeError: " + "object has no attribute '" + node[1] + "\n")
+                return 0
         elif node[0] == 'gt':
             return self.walkTree(node[1], n_editor, code_output) > self.walkTree(node[2], n_editor, code_output)
         elif node[0] == 'ge':
@@ -149,7 +156,10 @@ class BasicExecute:
             try:
                 return self.env[node[1]]
             except LookupError:
-                code_output.insert("1.0", "Undefined variable '" + node[1] + "' found!\n")
+                code_output.insert("1.0", "LookupError: Undefined variable '" + node[1] + "' found!\n")
+                return 0
+            except SyntaxError:
+                code_output.insert("1.0", "Illegal character found at " % node[1]+"\n")
         if node[0] == 'for_loop':
             if node[1][0] == 'for_loop_setup':
                 loop_setup = self.walkTree(node[1], n_editor, code_output)

@@ -79,8 +79,6 @@ class BasicLex(Lexer):
     #error
     def error(self, t):
         self.errors.append(t.value[0])
-        from main import code_output
-        code_output.insert("1.0", "Illegal character '%s'" % t.value[0])
         self.index += 1
 
     def __init__(self):

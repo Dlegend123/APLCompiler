@@ -1,10 +1,5 @@
 
 import sys
-import subprocess
-
-import sly.yacc
-from sly import*
-
 from BasicExecute import BasicExecute
 from BasicLex import BasicLex
 from tkinter import *
@@ -15,7 +10,7 @@ from BasicParser import BasicParser
 compiler = Tk()
 compiler.title('EndGame')
 compiler.geometry('650x550+200+200')
-compiler.config(highlightbackground='dimgrey', highlightthickness=3)
+compiler.config(highlightbackground='dimgrey', highlightthickness=5)
 file_path = ''
 
 
@@ -62,16 +57,20 @@ def run():
         #os.system("start /B start cmd.exe @cmd /k pyinstaller --onefile -w " + file_path.split("/")[-1])
         text = editor.get('1.0', END)
         if text:
-            n_editor = Text(pk_exe, background='darkred', fg="white", height=13, highlightthickness=5, highlightbackground='dimgrey')
+            n_editor = Text(pk_exe, background='darkred', fg="white", height=12, highlightthickness=5, highlightbackground='dimgrey')
             n_editor.pack()
-            code_output.delete('1.0', END)
+            code_output.delete("1.0", END)
             for x in text.rstrip('\r\n').split("\n"):
                 tree = parser.parse(lexer.tokenize(x))
                 #code_output.insert("1.0", tree)
                 n_editor.delete('1.0', END)
-                #BasicExecute(tree, env, n_editor, code_output)
                 BasicExecute(tree, env, n_editor, code_output)
             #output, error = process.communicate()
+        if len(parser.errors) > 0:
+            code_output.insert("1.0", "\n")
+            for error in parser.errors:
+                code_output.insert("1.0", error)
+                code_output.insert("1.0", "\n")
 
 
 menu_bar = Menu(compiler)
@@ -87,10 +86,10 @@ run_bar.add_command(label='Run', command=run)
 menu_bar.add_cascade(label='Run', menu=run_bar)
 compiler.config(menu=menu_bar)
 
-editor = Text()
+editor = Text(bg='#EEC900', fg='black', highlightthickness='1', highlightbackground='dimgrey')
 editor.config()
 editor.pack()
-code_output = Text(height=10, bg='black', fg='red')
+code_output = Text(height=12, bg='#3B3B3B', fg='white', highlightthickness='1', highlightbackground='dimgrey')
 code_output.pack()
 
 compiler.mainloop()
