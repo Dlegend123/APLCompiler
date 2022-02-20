@@ -101,6 +101,14 @@ class BasicExecute:
             except AttributeError:
                 code_output.insert("1.0", "AttributeError: "
                                    + "object has no attribute '" + node[1] + "\n")
+        elif node[0] == 'mod':
+            try:
+                return self.walkTree(node[1], n_editor, code_output) % self.walkTree(node[2], n_editor, code_output)
+            except TypeError:
+                code_output.insert("1.0", "unsupported operand type(s) for '*' found!\n")
+            except AttributeError:
+                code_output.insert("1.0", "AttributeError: "
+                                   + "object has no attribute '" + node[1] + "\n")
         elif node[0] == 'div':
             try:
                 return self.walkTree(node[1], n_editor, code_output) / self.walkTree(node[2], n_editor, code_output)

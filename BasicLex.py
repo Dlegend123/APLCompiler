@@ -10,7 +10,7 @@ class BasicLex(Lexer):
               f'ELSE', f'PRINT', f'THEN', f'SC', f'TO', f'BEGIN', f'COLON', f'END', f'FOR', f'ARROW', f'FUN', f'EXP', f'LPAREN', f'RPAREN'}
 
     ignore = '\t '
-    literals = {'=', '+', '-', '/', '*', '(', ')', ',', ';'}
+    literals = {'=', '+', '-', '/', '*', '(', ')', ',', ';', '%'}
 
     # Define tokens as regular expressions
     # (stored as raw strings)

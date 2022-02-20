@@ -24,9 +24,9 @@ class BasicParser(Parser):
     def statement(self, parsed):
         pass
 
-    @_('FOR var_assign TO expr THEN statement')
+    @_('FOR statement TO statement THEN statement')
     def statement(self, p):
-        return ('for_loop', ('for_loop_setup', p.var_assign, p.expr), p.statement)
+        return ('for_loop', ('for_loop_setup', p.statement0, p.statement1), p.statement2)
 
     @_('IF expr THEN statement ELSE statement')
     def statement(self, p):
@@ -40,11 +40,11 @@ class BasicParser(Parser):
     def statement(self, p):
         return ('while', p.expr, p.statement)
 
-    @_('FUN NAME "(" ")" ARROW statement')
+    @_('FUN NAME LPAREN RPAREN ARROW statement')
     def statement(self, p):
         return ('fun_def', p.NAME, p.statement)
 
-    @_('NAME "(" ")"')
+    @_('NAME LPAREN RPAREN')
     def statement(self, p):
         return ('fun_call', p.NAME)
 
@@ -71,6 +71,10 @@ class BasicParser(Parser):
     @_('expr "/" expr')
     def expr(self, p):
         return ('div', p.expr0, p.expr1)
+
+    @_('expr "%" expr')
+    def expr(self, p):
+        return ('mod', p.expr0, p.expr1)
 
     @_('"-" expr %prec UMINUS')
     def expr(self, p):
