@@ -1,3 +1,5 @@
+import parser
+
 
 class BasicExecute:
 
@@ -11,7 +13,11 @@ class BasicExecute:
             n_editor.insert("1.0", result)
         elif isinstance(result, str):
             n_editor.insert("1.0", result)
-
+        elif isinstance(result, bool):
+            if result is True:
+                n_editor.insert("1.0", "True")
+            else:
+                n_editor.insert("1.0", "False")
     def execute(self, instruction, arguments):
         return getattr(self, instruction)(*arguments)
 
@@ -33,10 +39,15 @@ class BasicExecute:
             else:
                 self.walkTree(node[1], n_editor, code_output)
                 self.walkTree(node[2], n_editor, code_output)
-
         if node[0] == 'print':
             return self.walkTree(node[1], n_editor, code_output)
-
+        if node[0] == 'comma':
+            return str(self.walkTree(node[1], n_editor, code_output))\
+                   + str(self.walkTree(node[2], n_editor, code_output))
+        if node[0] == 'comma1':
+            return str(self.walkTree(node[1], n_editor, code_output))\
+                   + str(self.walkTree(node[2], n_editor, code_output))\
+                   + str(self.walkTree(node[3], n_editor, code_output))
         if node[0] == 'num':
             return node[1]
 
@@ -98,9 +109,6 @@ class BasicExecute:
             except AttributeError:
                 code_output.insert("1.0", "AttributeError: "
                                    + "object has no attribute '"+node[1] + "\n")
-        elif node[0] == 'comma':
-            return str(self.walkTree(node[1], n_editor, code_output)) \
-                   + str(self.walkTree(node[2], n_editor, code_output))
         elif node[0] == 'le':
             return self.walkTree(node[1], n_editor, code_output) <= self.walkTree(node[2], n_editor, code_output)
         elif node[0] == 'lt':

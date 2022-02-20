@@ -72,7 +72,6 @@ def run():
                 #BasicExecute(tree, env, n_editor, code_output)
                 BasicExecute(tree, env, n_editor, code_output)
             #output, error = process.communicate()
-            #code_output.insert("1.0", error)
 
 
 menu_bar = Menu(compiler)

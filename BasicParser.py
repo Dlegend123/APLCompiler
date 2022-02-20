@@ -13,6 +13,7 @@ class BasicParser(Parser):
         ('left', '+', '-'),
         ('left', '*', '/'),
         ('right', 'UMINUS'),
+        ('right', 'EXP')
     )
 
     def __init__(self):
@@ -107,9 +108,17 @@ class BasicParser(Parser):
     def expr(self, p):
         return ('ne', p.expr0, p.expr1)
 
-    @_('PRINT expr "," expr', 'PRINT expr "," STRING', 'PRINT STRING "," expr')
+    @_('PRINT expr "," expr')
     def expr(self, p):
         return ('comma', p[1], p[3])
+
+    @_('PRINT expr "," expr "," expr')
+    def expr(self, p):
+        return ('comma1', p[1], p[3], p[5])
+
+    @_('PRINT expr')
+    def expr(self, p):
+        return 'print', p[1]
 
     @_('FLOAT', 'STRING', 'INTEGER')
     def expr(self, p):
@@ -118,10 +127,6 @@ class BasicParser(Parser):
     @_('LPAREN expr RPAREN','LPAREN statement RPAREN')
     def expr(self, p):
         return 'group-expression', p[1]
-
-    @_('PRINT expr')
-    def expr(self, p):
-        return 'print', p[1]
 
     @_('var_assign')
     def statement(self, p):

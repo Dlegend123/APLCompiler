@@ -61,7 +61,10 @@ class BasicLex(Lexer):
         return text
 
     NAME = r'[a-zA-Z_][a-zA-Z0-9_]*'
-
+    NAME['IF'] = IF
+    NAME['ELSE'] = ELSE
+    NAME['WHILE'] = WHILE
+    NAME['PRINT'] = PRINT
     # Comment token
     @_(r'//.*')
     def COMMENT(self, t):
