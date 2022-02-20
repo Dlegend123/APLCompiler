@@ -1,5 +1,7 @@
 
 import sys
+import subprocess
+
 from BasicExecute import BasicExecute
 from BasicLex import BasicLex
 from tkinter import *
@@ -53,12 +55,12 @@ def run():
         parser = BasicParser()
         pk_exe = Tk()
         pk_exe.title(file_path.split("/")[-1])
+        pk_exe.withdraw()
         env = {}
         #os.system("start /B start cmd.exe @cmd /k pyinstaller --onefile -w " + file_path.split("/")[-1])
         text = editor.get('1.0', END)
         if text:
             n_editor = Text(pk_exe, background='darkred', fg="white", height=12, highlightthickness=5, highlightbackground='dimgrey')
-            n_editor.pack()
             code_output.delete("1.0", END)
             for x in text.rstrip('\r\n').split("\n"):
                 tree = parser.parse(lexer.tokenize(x))
@@ -71,7 +73,9 @@ def run():
             for error in parser.errors:
                 code_output.insert("1.0", error)
                 code_output.insert("1.0", "\n")
-
+        else:
+            pk_exe.deiconify()
+            n_editor.pack()
 
 menu_bar = Menu(compiler)
 file_menu = Menu(menu_bar, tearoff=0)
