@@ -1,23 +1,26 @@
 import parser
 from tkinter import *
 
+import BasicLex
+
+
 class BasicExecute:
 
     def __init__(self, tree, env, n_editor, code_output):
         self.env = env
         result = self.walkTree(tree, n_editor, code_output)
-        if not str(code_output.get("1.0", END)).__contains__("Error"):
-            if result is None:
-                pass
-            elif result is not None and type(result) in [int, float]:
-                n_editor.insert("1.0", result)
-            elif isinstance(result, str):
-                n_editor.insert("1.0", result)
-            elif isinstance(result, bool):
-                if result is True:
-                    n_editor.insert("1.0", "True")
-                else:
-                    n_editor.insert("1.0", "False")
+
+        if result is None:
+            pass
+        elif result is not None and type(result) in [int, float]:
+            n_editor.insert("1.0", result)
+        elif isinstance(result, str):
+            n_editor.insert("1.0", result)
+        elif isinstance(result, bool):
+            if result is True:
+                n_editor.insert("1.0", "True")
+            else:
+                n_editor.insert("1.0", "False")
 
     def walkTree(self, node, n_editor, code_output):
 

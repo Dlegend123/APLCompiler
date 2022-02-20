@@ -23,7 +23,7 @@ def set_file_path(path):
 
 def save_as():
     if file_path == '':
-        path = asksaveasfilename(filetypes=[('Python Files', '*')])
+        path = asksaveasfilename(filetypes=[('Legacy Files', 'ly')])
     else:
         path = file_path
     with open(path, 'w') as file:
@@ -33,7 +33,7 @@ def save_as():
 
 
 def open_file():
-    path = askopenfilename(filetypes=[('Python Files', '*')])
+    path = askopenfilename(filetypes=[('Legacy Files', 'ly')])
     with open(path, 'r') as file:
         code = file.read()
         editor.delete('1.0', END)
@@ -65,7 +65,6 @@ def run():
             for x in text.rstrip('\r\n').split("\n"):
                 tree = parser.parse(lexer.tokenize(x))
                 #code_output.insert("1.0", tree)
-                n_editor.delete('1.0', END)
                 BasicExecute(tree, env, n_editor, code_output)
             #output, error = process.communicate()
         if len(parser.errors) > 0:
@@ -76,6 +75,9 @@ def run():
         else:
             pk_exe.deiconify()
             n_editor.pack()
+            with open(file_path.replace(".ly", ".exe"), 'w') as file:
+                code = editor.get('1.0', END)
+                file.write(code)
 
 menu_bar = Menu(compiler)
 file_menu = Menu(menu_bar, tearoff=0)

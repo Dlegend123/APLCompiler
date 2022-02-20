@@ -74,7 +74,7 @@ class BasicLex(Lexer):
     # errors in new line)
     @_(r'\n+')
     def newline(self, t):
-        self.lineno = t.value.count('\n')
+        self.lineno += t.value.count('\n')
 
     #error
     def error(self, t):
