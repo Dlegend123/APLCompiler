@@ -17,6 +17,7 @@ class BasicParser(Parser):
 
     def __init__(self):
         self.env = {}
+        self.errors = []
 
     @_('')
     def statement(self, parsed):
@@ -137,3 +138,6 @@ class BasicParser(Parser):
     @_('')
     def statement_list(self, p):
         return ('statement-list-end')
+
+    def error(self, tok):
+        self.errors.append(tok)

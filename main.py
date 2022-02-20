@@ -69,8 +69,8 @@ def run():
                 tree = parser.parse(lexer.tokenize(x))
                 #code_output.insert("1.0", tree)
                 n_editor.delete('1.0', END)
-                #BasicExecute(tree, env, code_output)
-                BasicExecute(tree, env, n_editor)
+                #BasicExecute(tree, env, n_editor, code_output)
+                BasicExecute(tree, env, n_editor, code_output)
             #output, error = process.communicate()
             #code_output.insert("1.0", error)
 

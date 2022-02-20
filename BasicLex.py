@@ -61,14 +61,7 @@ class BasicLex(Lexer):
         return text
 
     NAME = r'[a-zA-Z_][a-zA-Z0-9_]*'
-    NAME['IF'] = IF
-    NAME['THEN'] = IF
-    NAME['ELSE'] = ELSE
-    NAME['BEGIN'] = BEGIN
-    NAME['END'] = END
-    NAME['WHILE'] = WHILE
-    NAME['PRINT'] = PRINT
-    NAME['DO'] = DO
+
     # Comment token
     @_(r'//.*')
     def COMMENT(self, t):
@@ -82,6 +75,10 @@ class BasicLex(Lexer):
 
     #error
     def error(self, t):
+        self.errors.append(t.value[0])
         from main import code_output
         code_output.insert("1.0", "Illegal character '%s'" % t.value[0])
         self.index += 1
+
+    def __init__(self):
+        self.errors = []
