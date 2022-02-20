@@ -14,6 +14,8 @@ from BasicParser import BasicParser
 
 compiler = Tk()
 compiler.title('EndGame')
+compiler.geometry('650x550+200+200')
+compiler.config(highlightbackground='dimgrey', highlightthickness=3)
 file_path = ''
 
 
@@ -60,7 +62,7 @@ def run():
         #os.system("start /B start cmd.exe @cmd /k pyinstaller --onefile -w " + file_path.split("/")[-1])
         text = editor.get('1.0', END)
         if text:
-            n_editor = Text(pk_exe, background='darkred', fg="white", height=13)
+            n_editor = Text(pk_exe, background='darkred', fg="white", height=13, highlightthickness=5, highlightbackground='dimgrey')
             n_editor.pack()
             code_output.delete('1.0', END)
             for x in text.rstrip('\r\n').split("\n"):
@@ -90,8 +92,6 @@ editor = Text()
 editor.config()
 editor.pack()
 code_output = Text(height=10, bg='black', fg='red')
-border_color = Frame(code_output)
-border_color.pack(padx=320, pady=70)
 code_output.pack()
 
 compiler.mainloop()
