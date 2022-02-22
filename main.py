@@ -1,12 +1,14 @@
-
+import os
 import sys
 import subprocess
+
+import linker
 
 from BasicExecute import BasicExecute
 from BasicLex import BasicLex
 from tkinter import *
 from tkinter.filedialog import asksaveasfilename, askopenfilename
-
+from linker import*
 from BasicParser import BasicParser
 
 compiler = Tk()
@@ -57,7 +59,8 @@ def run():
         pk_exe.title(file_path.split("/")[-1])
         pk_exe.withdraw()
         env = {}
-        #os.system("start /B start cmd.exe @cmd /k pyinstaller --onefile -w " + file_path.split("/")[-1])
+        linker.Linker.
+        os.system("start /B start cmd.exe @cmd /k pyinstaller --onefile -w " + file_path.split("/")[-1])
         text = editor.get('1.0', END)
         if text:
             n_editor = Text(pk_exe, background='darkred', fg="white", height=12, highlightthickness=5, highlightbackground='dimgrey')
